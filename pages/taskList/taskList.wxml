@@ -1,0 +1,359 @@
+<!--pages/taskList/taskList.wxml-->
+
+<image class="header-img" src="/images/headergif.gif" />
+<view class="container-main">
+  <view class="container-background">
+    <view class="container-header">
+      <image class="avatar" src="{{weiboUserAvatar}}"></image>
+      <view class="userinfo">
+        <view class="userinfo-text">
+          <view>{{weiboUserState}}</view>
+        </view>
+        <view class="userinfo-select">
+          <view>微博用户：</view>
+          <van-cell-group inset>
+            <van-cell custom-class="select_custom" title-class="select_title" title="{{curWeiboUser}}" is-link bind:click="showWeiboUserPicker" />
+          </van-cell-group>
+          <van-popup show="{{openWeiboUserPicker}}" position="bottom" bind:close="closeWeiboUserPicker">
+            <van-picker item-height="{{30}}" title="选择微博用户" show-toolbar columns="{{showWeiboUserList}}" bind:change="onWeiboUserChange" bind:cancel="closeWeiboUserPicker" bind:confirm="confirmWeiboUserPicker" />
+          </van-popup>
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="container-collapse-background">
+    <van-divider class="container-collapse-title" contentPosition="center" customStyle="color: #569597; border-color: #569597; font-size: 23px; font-weight: bold" dashed>
+      任务列表
+    </van-divider>
+    <van-collapse class="collapse-body" accordion value="{{ collapseName }}" bind:change="collapseNameChange">
+      <van-collapse-item name="1" disabled="{{task1State}}">
+        <view class="collapse-title" slot="title">
+          <view class="left">
+            <block wx:if="{{task1State}}">
+              <image src="/images/taskLoding.png"></image>
+            </block>
+            <block wx:else>
+              <image src="/images/taskReady.png"></image>
+            </block>
+          </view>
+          <view class="right">
+            <view class="name">任务1：养号</view>
+            <block wx:if="{{task1State}}">
+              <view class="info">正在执行</view>
+            </block>
+            <block wx:else>
+              <view class="info">未执行</view>
+            </block>
+          </view>
+        </view>
+
+        <view class="collapse-item">
+          <view class="container-firstTaskBody">
+            <view class="taskName">
+              任务1：养号
+            </view>
+            <view class="taskInfo-text">
+              <view class="taskInfo-time">选择执行时间：</view>
+              <checkbox-group class="container-checkbox" bind:change="checkHandlerTask1">
+                <block wx:for="{{dateList}}" wx:key="id">
+                  <checkbox checked="{{checkedList[index]}}" value="{{index}}">{{dateList[index]}}</checkbox>
+                </block>
+                <button type="default" size="mini" class="selectButton" bind:tap="allSelect">全选</button>
+                <button type="default" size="mini" class="deselectButton" bind:tap="deSelect">全不选</button>
+                <button type="default" size="mini" class="inverseButton" bind:tap="inverseSelect">反选</button>
+
+              </checkbox-group>
+              <view class="taskInfo-count">执行天数：</view>
+              <!-- <input type="number" class="taskInfo-countInput" placeholder="默认：已选个数×5" /> -->
+              <van-stepper class="taskInfo-countInput" value="{{ task1_freq }}" min="1" max="7" integer bind:change="onChangeTask1_freq" />
+            </view>
+            <button disabled="{{!loginState||task1State||globalDisable}}" type="primary" class="taskInfo-button" size="mini" bind:tap="uploadTask1">开始任务</button>
+          </view>
+        </view>
+      </van-collapse-item>
+      <van-collapse-item name="2" disabled="{{task2State}}">
+        <view class="collapse-title" slot="title">
+          <view class="left">
+            <block wx:if="{{task2State}}">
+              <image src="/images/taskLoding.png"></image>
+            </block>
+            <block wx:else>
+              <image src="/images/taskReady.png"></image>
+            </block>
+          </view>
+          <view class="right">
+            <view class="name">任务2：超话发帖</view>
+            <block wx:if="{{task2State}}">
+              <view class="info">正在执行</view>
+            </block>
+            <block wx:else>
+              <view class="info">未执行</view>
+            </block>
+          </view>
+        </view>
+
+        <view class="collapse-item">
+          <view class="container-secondTaskBody">
+            <view class="taskName">
+              任务2：超话发帖
+            </view>
+            <view class="taskInfo-text">
+              <view class="taskInfo-mode">设置发帖频率：</view>
+              <view class="taskInfo-mode-content">
+                <view class="taskInfo-mode-content-row">
+                  <view class="row-title">每次同时发送</view>
+                  <!-- <input type="number" class="taskInfo-freq" placeholder="默认：6" /> -->
+                  <van-stepper class="taskInfo-freq" value="{{ task2_PostCount }}" min="1" max="15" integer bind:change="onChangeTask2_PostCount" />
+                  <view class="taskInfo-token">个帖子 ±2个</view>
+                </view>
+                <view class="taskInfo-mode-content-row">
+                  <view class="row-title">每次间隔</view>
+                  <!-- <input type="number" class="taskInfo-freq" placeholder="默认：17" /> -->
+                  <van-stepper class="taskInfo-freq" value="{{ task2_PostFreq }}" min="10" max="45" integer bind:change="onChangeTask2_PostFreq" />
+                  <view class="taskInfo-token">分钟 ±2分钟</view>
+                </view>
+
+              </view>
+              <view class="taskInfo-time">选择执行方式：</view>
+              <radio-group class="group" bindchange="radioTask2Change">
+                <view class="label-2" wx:for="{{radioItems}}" wx:key="radioItems">
+                  <radio id="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></radio>
+                  <label class="label-2-text" for="{{item.name}}"><text>{{item.name}}</text></label>
+                </view>
+              </radio-group>
+              <block wx:if="{{radioValueTask2 === 'time'}}">
+                <view class="taskInfo-count">任务执行时长：</view>
+                <view class="taskInfo-timeInput">
+                  <van-cell-group inset>
+                    <van-cell disabled="{{!loginState}}" title="{{task_2_freqDate_value[0]+task_2_freqDate_value[1]}}" is-link bind:click="showFreqDatePickerTask2" />
+                  </van-cell-group>
+                  <van-popup show="{{openFreqDatePickerTask2}}" position="bottom" bind:close="closeFreqDatePickerTask2">
+                    <van-picker item-height="{{30}}" title="选择时间" show-toolbar columns="{{columnsFreqDateTask2}}" bind:change="onFreqDateChange" bind:cancel="closeFreqDatePickerTask2" bind:confirm="confirmFreqDatePickerTask2" />
+                  </van-popup>
+                </view>
+              </block>
+              <block wx:else>
+                <view class="taskInfo-count">发博个数：</view>
+                <input type="number" class="taskInfo-countInput" placeholder="默认：300" bind:input="onInputTask2_CountFreq" />
+              </block>
+              <checkbox-group class="container-checkbox" bind:change="onChangeTask2_Continue">
+                    <checkbox value="continue">等待“频繁”结束后继续执行</checkbox>
+              </checkbox-group>
+            </view>
+
+            <button disabled="{{!loginState||task2State||globalDisable}}" type="primary" class="taskInfo-button" size="mini" bind:tap="uploadTask2">开始任务</button>
+
+          </view>
+        </view>
+      </van-collapse-item>
+      <van-collapse-item name="3" disabled="{{task3State}}">
+        <view class="collapse-title" slot="title">
+          <view class="left">
+            <block wx:if="{{task3State}}">
+              <image src="/images/taskLoding.png"></image>
+            </block>
+            <block wx:else>
+              <image src="/images/taskReady.png"></image>
+            </block>
+          </view>
+          <view class="right">
+            <view class="name">任务3：超话转赞评</view>
+            <block wx:if="{{task3State}}">
+              <view class="info">正在执行</view>
+            </block>
+            <block wx:else>
+              <view class="info">未执行</view>
+            </block>
+          </view>
+        </view>
+
+        <view class="collapse-item">
+          <view class="container-thirdTaskBody">
+            <view class="taskName">
+              任务3：超话转赞评
+            </view>
+            <view class="taskInfo-text">
+              <view class="taskInfo-mode">任务设置：</view>
+              <view class="taskInfo-mode-content">
+                <view class="taskInfo-mode-content-check">
+                  <checkbox-group class="container-checkbox" bind:change="checkHandlerTask3">
+                    <checkbox checked value="repost">转发</checkbox>
+                    <checkbox checked value="like">点赞</checkbox>
+                    <checkbox checked value="comment">评论</checkbox>
+                  </checkbox-group>
+                </view>
+                <view class="taskInfo-mode-content-row">
+                  <view class="row-title">每次互动用户个数</view>
+                  <van-stepper class="taskInfo-freq" value="{{ task3_UserCount }}" min="1" max="8" integer bind:change="onChangeTask3_UserCount" />
+                  <view class="taskInfo-token">个用户 ±2个</view>
+                </view>
+                <view class="taskInfo-mode-content-row">
+                  <view class="row-title">每次间隔</view>
+                  <van-stepper class="taskInfo-freq" value="{{ task3_TaskInterval }}" min="15" max="45" integer bind:change="onChangeTask3_TaskInterval" />
+                  <view class="taskInfo-token">分钟 ±2分钟</view>
+                </view>
+
+              </view>
+              <view class="taskInfo-time">选择执行方式：</view>
+              <radio-group class="group" bindchange="radioTask3Change">
+                <view class="label-2" wx:for="{{radioItems}}" wx:key="radioItems">
+                  <radio id="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></radio>
+                  <label class="label-2-text" for="{{item.name}}"><text>{{item.name}}</text></label>
+                </view>
+              </radio-group>
+              <block wx:if="{{radioValueTask3 === 'time'}}">
+                <view class="taskInfo-count">任务执行时长：</view>
+                <view class="taskInfo-timeInput">
+                  <van-cell-group inset>
+                    <van-cell disabled="{{!loginState}}" title="{{task_3_freqDate_value[0]+task_3_freqDate_value[1]}}" is-link bind:click="showFreqDatePickerTask3" />
+                  </van-cell-group>
+                  <van-popup show="{{openFreqDatePickerTask3}}" position="bottom" bind:close="closeFreqDatePickerTask3">
+                    <van-picker item-height="{{30}}" title="选择时间" show-toolbar columns="{{columnsFreqDateTask3}}" bind:change="onFreqDateChange" bind:cancel="closeFreqDatePickerTask3" bind:confirm="confirmFreqDatePickerTask3" />
+                  </van-popup>
+                </view>
+              </block>
+              <block wx:else>
+                <view class="taskInfo-count">执行次数：</view>
+                <input type="number" class="taskInfo-countInput" placeholder="默认：300" bind:input="onInputTask3_CountFreq" />
+              </block>
+
+            </view>
+
+            <button disabled="{{!loginState||task3State||globalDisable}}" type="primary" class="taskInfo-button" size="mini" bind:tap="uploadTask3">开始任务</button>
+
+          </view>
+        </view>
+      </van-collapse-item>
+      <van-collapse-item name="4" disabled="{{task4State}}">
+        <view class="collapse-title" slot="title">
+          <view class="left">
+            <block wx:if="{{task4State}}">
+              <image src="/images/taskLoding.png"></image>
+            </block>
+            <block wx:else>
+              <image src="/images/taskReady.png"></image>
+            </block>
+          </view>
+          <view class="right">
+            <view class="name">任务4：转发微博</view>
+            <block wx:if="{{task4State}}">
+              <view class="info">正在执行</view>
+            </block>
+            <block wx:else>
+              <view class="info">未执行</view>
+            </block>
+          </view>
+        </view>
+
+        <view class="collapse-item">
+          <view class="container-fourthTaskBody">
+            <view class="taskName">
+              任务4：转发微博
+            </view>
+            <view class="container-taskInfo">
+              <view class="taskLink">
+                <view>转发微博链接：</view>
+                <input class="taskInfo-link" placeholder="必填" bind:change="onInputTask4_WeiboUrl" />
+              </view>
+              <view class="taskCount">
+                <view>每轮转发条数/条：</view>
+                <input type="number" class="taskInfo-freq" placeholder="默认：15" bind:input="onInputTask4_CountFreq" />
+              </view>
+              <view class="taskInterval">
+                <view>转发间隔时间/秒±3秒：</view>
+                <input type="number" class="taskInfo-freq" placeholder="默认：15秒" bind:input="onInputTask4_taskInterval" />
+              </view>
+              <view class="taskRound">
+                <view>执行轮次/次：</view>
+                <input type="number" class="taskInfo-freq" placeholder="默认：10轮" bind:input="onInputTask4_taskRound" />
+              </view>
+              <view class="taskRoundInterval">
+                <view>每轮间隔/分钟±3分钟：</view>
+                <input type="number" class="taskInfo-freq" placeholder="默认：20分钟" bind:input="onInputTask4_taskRoundInterval" />
+              </view>
+              <view class="taskExpect">
+                <view>预计平均执行时间：{{task4_totalTime}}</view>
+                <view>预计执行总个数：{{task4_totalCount}}</view>
+              </view>
+              <button disabled="{{!loginState||task4State||globalDisable}}" type="primary" class="taskInfo-button" size="mini" bind:tap="uploadTask4">开始任务</button>
+            </view>
+
+          </view>
+        </view>
+      </van-collapse-item>
+      <van-collapse-item name="5" disabled="{{task5State}}">
+        <view class="collapse-title" slot="title">
+          <view class="left">
+            <block wx:if="{{task5State}}">
+              <image src="/images/taskLoding.png"></image>
+            </block>
+            <block wx:else>
+              <image src="/images/taskReady.png"></image>
+            </block>
+          </view>
+          <view class="right">
+            <view class="name">任务5：定时微博</view>
+            <block wx:if="{{task5State}}">
+              <view class="info">正在执行</view>
+            </block>
+            <block wx:else>
+              <view class="info">未执行，剩余次数∞</view>
+            </block>
+          </view>
+        </view>
+
+        <view class="collapse-item">
+          <view class="container-fifthTaskBody">
+            <view class="taskName">
+              任务5：定时微博
+            </view>
+
+            <view class="container-taskInfo">
+              <view class="taskInfo-mode-content-check">
+                <checkbox-group class="container-checkbox" bind:change="task5_checkChange">
+                  <checkbox checked value="splitImg">九宫格</checkbox>
+                  <checkbox value="postIntoSuperTopic">发送至超话</checkbox>
+                </checkbox-group>
+              </view>
+              <view class="textarea-topicUrl">
+                <van-cell-group>
+                  <van-field title-width="120rpx" readonly="{{!postIntoSuperTopic}}" custom-class="topicUrl" label-class="topicUrlLabel" label="超话链接" value="{{ value }}" placeholder="weibo.com/p/xxx/super_index" bind:change="topicUrlChange" />
+                </van-cell-group>
+              </view>
+              <view class="textarea">
+                <view class="tips">*超话格式：#每日一善[超话]#_</view>
+                <view class="tips">*话题格式：#阳光信用#_</view>
+                <view class="tips">*下划线"_"位置需要输入空格</view>
+                <fui-textarea disabled="{{curWeiboIdx === -1 || task5State}}" bind:input="postTextInput" radius="20rpx" borderColor="rgba(86,149,151)" textareaBorder isCounter placeholder="请输入内容"></fui-textarea>
+              </view>
+              
+              <view class="container-uploader">
+                <van-uploader class="uploader" deletable disabled="{{curWeiboIdx === -1 || task5State}}"  file-list="{{ imgFileList }}" bind:after-read="afterRead" bind:delete="imgListDelete" max-count="1" preview-size="100px" />
+                <view class="uploadImgTips">{{uploadTips}}</view>
+              </view>
+              
+              <view class="taskInfo-timeInput">
+                
+                <van-cell-group inset>
+                  <van-cell disabled="{{!loginState}}" title="{{Task5_executeTime}}" is-link bind:click="onMDhm" />
+                </van-cell-group>
+                <date-picker bind:datePickerCancellEvent="datePickerCancellEvent" bind:datePickerOkEvent="datePickerOkEvent" isShowDatePicker="{{isShowPicker}}" mode="{{mode}}" data="{{data}}" date="{{date}}">
+                </date-picker>
+              </view>
+
+              <button disabled="{{!loginState||task5State||globalDisable||!uploadTipsState}}" type="primary" class="taskInfo-button" size="mini" bind:tap="uploadTask5">开始任务</button>
+            </view>
+
+          </view>
+        </view>
+      </van-collapse-item>
+    </van-collapse>
+  </view>
+
+
+
+
+
+</view>

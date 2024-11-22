@@ -1,0 +1,21 @@
+{
+  "usingComponents": {
+    "van-popup": "@vant/weapp/popup/index",
+    "van-field": "@vant/weapp/field/index",
+    "van-picker": "@vant/weapp/picker/index",
+    "van-uploader": "@vant/weapp/uploader/index",
+    "van-divider": "@vant/weapp/divider/index",
+    
+    "van-cell": "@vant/weapp/cell/index",
+    "van-cell-group": "@vant/weapp/cell-group/index",
+    "van-stepper": "@vant/weapp/stepper/index",
+    "van-collapse": "@vant/weapp/collapse/index",
+    "van-collapse-item": "@vant/weapp/collapse-item/index",
+
+    "date-picker":"/utils/date-picker/date-picker",
+    "fui-textarea":"/utils/fui-textarea/fui-textarea"
+  },
+  "backgroundColor": "#569597",
+  "enablePullDownRefresh": true
+
+}

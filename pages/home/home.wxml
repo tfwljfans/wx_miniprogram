@@ -1,0 +1,139 @@
+<!--pages/home/home.wxml-->
+
+<image class="header-img" src="/images/headergif.gif" />
+
+<view class="container-main">
+  <view class="container-background" style="background-color: #ecf9ff;">
+    <!-- <van-notice-bar class="notice" left-icon="volume-o" text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。" /> -->
+    <van-notice-bar color="#1989fa" background="#ecf9ff" left-icon="info-o" text="使用前请阅读公众号中的使用说明。小程序需要注册登录才可以正常使用，仅需输入昵称绑定微信即可~" />
+  </view>
+  
+  <view class="container-background">
+    <view class="container-header">
+      <image src="{{userAvatarUrl}}" class="avatar"></image>
+      <view class="userinfo">
+        <view>
+          <view class="userNickName">{{userNickName}}</view>
+          <view class="countWeibo">已记录微博个数：{{countWeibo}}</view>
+        </view>
+      </view>
+      <block wx:if="{{loginState}}">
+        <button size="mini" class="mini-btn-logout" bind:tap="logout">注销</button>
+      </block>
+      <block wx:else>
+        <button size="mini" type="primary" class="mini-btn-login" bind:tap="login">注册登录</button>
+      </block>
+    </view>
+    <view class="container-header" style="margin-top: -0.2%;">
+      <view class="container-support" style="width: 100%;">
+        <view class="support-text_1" style="width: 100%;">
+          <block wx:if="{{rewardVideoCount_daily >= 5}}">
+            感谢支持~{{emoji_2}}
+          </block>
+          <block wx:else>
+            <block wx:if="{{rewardVideoLimit}}">
+              暂无广告，感谢支持~{{emoji_2}}
+            </block>
+            <block wx:else>
+              观看30s广告以支持小程序并获得更多定时微博次数~
+            </block>
+          </block>
+          </view>
+        <view class="support-button">
+          <button disabled="{{rewardVideoCount_daily >= 5 || rewardVideoLimit}}" size="mini" type="default" bind:tap="openRewardVideoAd">
+          观看广告</button>
+        </view>
+        <view class="support-text_2" style="width: 100%;">
+          <block wx:if="{{rewardComplete}}">
+            <block wx:if="{{rewardVideoLimit}}">
+              今日∞/5, 已经支持{{rewardVideoCount}}次~{{emoji}}
+            </block>
+            <block wx:else>
+              今日{{rewardVideoCount_daily}}/5, 已经支持{{rewardVideoCount}}次~{{emoji}}
+            </block>
+          </block>
+          <block wx:else>
+            需至少观看30s，QAQ!
+            
+            
+          </block>
+          
+        </view>
+      </view>
+    </view>
+    
+  </view>
+
+
+  <view class="container-background">
+    <view class="container-QRcodeBody">
+      <view class="container-QRcode-left">
+        <view class="QRcodeTip">{{QRcodeTips}}</view>
+        <button class="QRcodeGetButton" type="primary" size="mini" disabled="{{!loginState||QRcodeLoadingState||(QRcodeLive&&QRcodeState)}}" bind:tap="getWeiboQRcode">获取微博二维码</button>
+      </view>
+
+      <view class="container-QRcode">
+        <view class="weiboQRcode-body">
+          <block wx:if="{{QRcodeState&&!QRcodeLive}}">
+            <image class="weiboQRcode-mask" src="/images/expire.png" mode="center"></image>
+            <image class="weiboQRcode-inMask" src="{{QRcodeUrl}}" mode="{{!QRcodeLoadingState&&!QRcodeState?'center':'scaleToFill'}}"></image>
+          </block>
+          <block wx:elif="{{QRcodeLoadingState&&QRcodeState}}">
+            <image class="weiboQRcode" src="{{QRcodeUrl}}" mode="{{!QRcodeLoadingState&&!QRcodeState?'center':'scaleToFill'}}"></image>
+          </block>
+          <block wx:else>
+            <!-- <image class="weiboQRcode-mask" src="/images/expire.png" mode="center"></image> -->
+            <image class="weiboQRcode" src="{{QRcodeUrl}}" mode="{{!QRcodeLoadingState&&!QRcodeState?'center':'scaleToFill'}}"></image>
+          </block>
+
+        </view>
+        <button type="primary" size="mini" disabled="{{!loginState||!QRcodeState||!QRcodeLive||QRcodeLoadingState}}" bind:tap="saveWeiboQRcode">保存二维码</button>
+      </view>
+
+    </view>
+  </view>
+  
+  <view class="container-background">
+    <view class="container-weiboUserListBody">
+      <view class="tips">tips: 左滑登出右滑删除~</view>
+      
+      <view class="weiboUserList">
+        <ad style="z-index: 0;" unit-id="adunit-b67ff0a4c1f2a785" ad-type="video" ad-theme="white" bindload="adLoad" binderror="adError" bindclose="adClose"></ad>
+        <view class="weiboUser" wx:for="{{weiboUserList}}" wx:key="index">
+          <van-swipe-cell disabled="{{!loginState}}" left-width="{{65}}" right-width="{{ 65 }}" name="{{index}}" async-close bind:close="weiboUseronClose">
+            <view slot="left" class="van-swipe-cell__left">删除</view>
+            <view class="weiboUser-body">
+              <view class="weiboAvatar">
+                <image src='{{item.userAvatar}}'></image>
+              </view>
+              <view class="weiboNickName">{{item.userNickName}}</view>
+              <view class="weiboState">{{item.userState}}</view>
+            </view>
+            <view slot="right" class="van-swipe-cell__right">登出</view>
+          </van-swipe-cell>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  
+  <!-- <view>{{userOpenId}}</view> -->
+
+</view>
+
+<van-dialog
+    id="van-dialog" 
+    use-slot
+    use-title-slot
+    show="{{ noticeShow }}"
+  >
+  <view class="container-notice">
+    <view class="container-noticeTitle">{{noticeTitle}}</view>
+    <text class="container-noticeText">{{noticeMessage}}</text>
+    <checkbox-group class="container-noticeBox" bind:change="noticeChange">
+          <checkbox value="noticeValue">不再提醒</checkbox>
+    </checkbox-group>
+  </view>
+  
+    <!-- <image src="https://img.yzcdn.cn/1.jpg" /> -->
+</van-dialog>

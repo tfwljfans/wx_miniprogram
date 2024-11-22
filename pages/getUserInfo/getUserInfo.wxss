@@ -1,0 +1,54 @@
+/* pages/getUserInfo/getUserInfo.wxss */
+.avatar-wrapper {
+  padding: 0;
+  width: 56px !important;
+  border-radius: 8px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  background-color: #fff;
+}
+
+.avatar {
+  display: block;
+  width: 56px;
+  height: 56px;
+}
+
+.container {
+  display: flex;
+}
+.row{
+   border-top: 1px solid #ccc;
+   border-bottom: 1px solid #ccc;
+   background-color: whitesmoke;
+   display: flex;
+   align-items: center;
+   height: 80rpx;
+   padding-left: 20rpx;
+   border-radius: 8px;
+   margin-left: 20rpx;
+   margin-right: 20rpx;
+}
+
+.ps {
+  display: flex;
+  justify-content: left;
+  /* flex-direction: row-reverse; */
+  font-size: 25rpx;
+  margin-left: 20rpx;
+  margin-top: 10rpx;
+  color: #FB4F4F;
+}
+
+.text1{
+    flex: 2;
+}
+.weui-input{
+    flex: 6;
+}
+
+.submitButton {
+  width: 400rpx;
+  border-radius: 20rpx;
+}
+

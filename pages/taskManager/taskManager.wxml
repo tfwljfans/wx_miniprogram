@@ -1,0 +1,132 @@
+<!--pages/taskManager/taskManager.wxml-->
+
+<image class="header-img" src="/images/headergif.gif" />
+<view class="container-main">
+  <view class="container-background">
+  
+  
+    <view class="container-header">
+      <image class="avatar" src="{{weiboUserAvatar}}"></image>
+      <view class="userinfo">
+        <view class="userinfo-text">
+          <view>{{weiboUserState}}</view>
+          <button disabled="{{globalDisable||(killButton_task1&&killButton_task2&&killButton_task3&&killButton_task4&&killButton_task5)}}" type="warn" size="mini" class="mini-btn-close" data-value="1" data-task="allTask" bind:tap="delWeiboTask">结束全部</button>
+        </view>
+        <view class="userinfo-select">
+          <view>微博用户：</view>
+          <van-cell-group inset>
+            <van-cell custom-class="select_custom" title-class="select_title" title="{{curWeiboUser}}" is-link bind:click="showWeiboUserPicker" />
+          </van-cell-group>
+          <van-popup show="{{openWeiboUserPicker}}" position="bottom" bind:close="closeWeiboUserPicker">
+            <van-picker item-height="{{30}}" title="选择微博用户" show-toolbar columns="{{showWeiboUserList}}" bind:change="onWeiboUserChange" bind:cancel="closeWeiboUserPicker" bind:confirm="confirmWeiboUserPicker" />
+          </van-popup>
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+  <!-- <view class="container-background">
+    <van-notice-bar color="#1989fa" background="#ecf9ff" left-icon="info-o" text="tips:任务日志部分内容存在5分钟更新延迟" />
+  </view> -->
+  
+
+  <view class="container-background">
+    <view class="container-taskInfoBody">
+      <view class="taskName">
+        任务1：养号
+      </view>
+      <view class="container-taskInfo">
+        <view class="taskInfo-text">
+          <view>{{task1Info_first}}</view>
+          <view>{{task1Info_second}}</view>
+        </view>
+        <button disabled="{{globalDisable||killButton_task1||flushButton_task1}}"  type="warn" class="taskInfo-button" size="mini" data-value="2" data-task="task1" bind:tap="delWeiboTask" loading="{{flushKillButton_task1}}">结束任务</button>
+        <button disabled="{{globalDisable||flushButton_task1}}" class="taskInfo-button" size="mini" data-task="task1" bind:tap="flushWeiboTaskLog" loading="{{flushButton_task1}}">刷新</button>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="container-background">
+    <view class="container-taskInfoBody">
+      <view class="taskName">
+        任务2：超话发帖
+      </view>
+      <view class="container-taskInfo">
+        <view class="taskInfo-text">
+          <view>{{task2Info_first}}</view>
+          <view>{{task2Info_second}}</view>
+        </view>
+        <button disabled="{{globalDisable||killButton_task2||flushButton_task2}}"  type="warn" class="taskInfo-button" size="mini" data-value="2" data-task="task2" bind:tap="delWeiboTask" loading="{{flushKillButton_task2}}">结束任务</button>
+        <button disabled="{{globalDisable||flushButton_task2}}" class="taskInfo-button" size="mini" data-task="task2" bind:tap="flushWeiboTaskLog" loading="{{flushButton_task2}}">刷新</button>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="container-background" style="display: {{adShow}};">
+    <view class="container-header">
+      <view class="container-header">
+        <ad style="z-index: 0;" unit-id="adunit-bb1803b5ca66a4b2" ad-type="video" ad-theme="white" bindload="adLoad" binderror="adError" bindclose="adClose" autoplay></ad>
+      </view>
+      
+    </view>
+  </view>
+
+  <view class="container-background">
+    <view class="container-taskInfoBody">
+      <view class="taskName">
+        任务3：超话转赞评
+      </view>
+      <view class="container-taskInfo">
+        <view class="taskInfo-text">
+          <view>{{task3Info_first}}</view>
+          <view>{{task3Info_second}}</view>
+        </view>
+        <button disabled="{{globalDisable||killButton_task3||flushButton_task3}}"  type="warn" class="taskInfo-button" size="mini" data-value="2" data-task="task3" bind:tap="delWeiboTask" loading="{{flushKillButton_task3}}">结束任务</button>
+        <button disabled="{{globalDisable||flushButton_task3}}" class="taskInfo-button" size="mini" data-task="task3" bind:tap="flushWeiboTaskLog" loading="{{flushButton_task3}}">刷新</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="container-background">
+    <view class="container-taskInfoBody">
+      <view class="taskName">
+        任务4：转发任务
+      </view>
+      <view class="container-taskInfo">
+        <view class="taskInfo-text">
+          <view>{{task4Info_first}}</view>
+          <view>{{task4Info_second}}</view>
+        </view>
+        <button disabled="{{globalDisable||killButton_task4||flushButton_task4}}"  type="warn" class="taskInfo-button" size="mini" data-value="2" data-task="task4" bind:tap="delWeiboTask" loading="{{flushKillButton_task4}}">结束任务</button>
+        <button disabled="{{globalDisable||flushButton_task4}}" class="taskInfo-button" size="mini" data-task="task4" bind:tap="flushWeiboTaskLog" loading="{{flushButton_task4}}">刷新</button>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="container-background">
+    <view class="container-taskInfoBody">
+      <view class="taskName">
+        任务5：定时微博
+      </view>
+      <view class="container-taskInfo">
+        <view class="taskInfo-text">
+          <view>{{task5Info_first}}</view>
+          <view>{{task5Info_second}}</view>
+        </view>
+        <button disabled="{{globalDisable||killButton_task5||flushButton_task5}}"  type="warn" class="taskInfo-button" size="mini" data-value="2" data-task="task5" bind:tap="delWeiboTask" loading="{{flushKillButton_task5}}">结束任务</button>
+        <button disabled="{{globalDisable||flushButton_task5}}" class="taskInfo-button" size="mini" data-task="task5" bind:tap="flushWeiboTaskLog" loading="{{flushButton_task5}}">刷新</button>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="container-background">
+  
+  </view>
+
+  
+</view>

@@ -1,0 +1,22 @@
+<!--pages/getUserInfo/getUserInfo.wxml-->
+<view data-weui-theme="{{theme}}">
+  <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+    <image class="avatar" src="{{avatarUrl}}"></image>
+  </button> 
+  <form catchsubmit="formSubmit">
+    <view class="row">
+      <view class="text1">用户名：</view>
+        <input value="{{username}}" type="nickname" class="weui-input" name="nickname" placeholder="请输入用户名"/>
+    </view>
+    <!-- <view class="row">
+      <view class="text1">密码：</view>
+        <input password class="weui-input" name="password" placeholder="请输入密码"/>
+    </view> -->
+    <view class="ps">*用户名与微信绑定，更换微信后用户名失效，建议使用微信昵称</view>
+    <view class="ps">*点击头像框设置头像</view>
+    <view class="ps">*用户名忘记或需更改，请通过右上角反馈客服</view>
+    <button class="submitButton" type="primary" style="margin-top: 40rpx;margin-bottom: 20rpx;" form-type="submit">提交</button>
+  </form>
+</view>
+
+<van-dialog show="{{dialogShow}}" id="van-dialog" bind:close="dialogClose" />

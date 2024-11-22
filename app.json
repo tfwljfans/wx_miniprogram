@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/taskList/taskList",
+    "pages/taskManager/taskManager",
+    "pages/getUserInfo/getUserInfo",
+    "utils/date-picker/date-picker"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#569597",
+    "navigationBarTitleText": "QiYu智能Ai助手",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/taskManager/taskManager",
+        "text": "任务管理",
+        "iconPath": "images/manager.png",
+        "selectedIconPath": "images/manager-active.png"
+      },
+      {
+        "pagePath": "pages/taskList/taskList",
+        "text": "任务列表",
+        "iconPath": "images/message.png",
+        "selectedIconPath": "images/message-active.png"
+      }
+    ],
+    "borderStyle":"white",
+    "backgroundColor": "#d4c1a6"
+  },
+  "sitemapLocation": "sitemap.json"
+}
